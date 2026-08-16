@@ -1,0 +1,6 @@
+<?php
+session_start(); include 'connect/conn.php';
+if(isset($_POST['login'])){ $email=trim($_POST['email']); $password=$_POST['password']; $stmt=$conn->prepare("SELECT * FROM users WHERE email=? AND status='Y' LIMIT 1"); $stmt->bind_param('s',$email); $stmt->execute(); $user=$stmt->get_result()->fetch_assoc(); if($user && password_verify($password,$user['password'])){ $_SESSION['user']=$user; header('Location: index.php'); exit; } $error='อีเมลหรือรหัสผ่านไม่ถูกต้อง'; }
+$pageTitle='เข้าสู่ระบบ | Travel Ticket'; include 'header.php'; ?>
+<div class="row justify-content-center"><div class="col-md-6 col-lg-5"><div class="page-box login-box"><div class="login-icon"><i class="fa-solid fa-ticket"></i></div><h2 class="section-title mb-4">เข้าสู่ระบบ</h2><?php if(!empty($error)): ?><div class="alert alert-danger"><?=$error?></div><?php endif; ?><form method="post"><label class="form-label">อีเมล</label><input class="form-control mb-3" type="email" name="email" required placeholder="demo@travelticket.com"><label class="form-label">รหัสผ่าน</label><input class="form-control mb-3" type="password" name="password" required placeholder="123456"><button name="login" class="btn btn-travel w-100">เข้าสู่ระบบ</button></form><div class="small text-muted mt-3">บัญชีทดลอง: demo@travelticket.com / 123456</div></div></div></div>
+<?php include 'footer.php'; ?>
